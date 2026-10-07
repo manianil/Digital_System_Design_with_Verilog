@@ -1,44 +1,53 @@
-module SRLatch (input EN, R, S, output reg Q, Qbar);
+// Positive Level D Latch
+module Pos_Level_DLatch (input D, EN, output reg Q, Qb);
 
 always@(*)
 begin
 if(EN)
-	begin
-	case({S,R})
-	2'b01: Q = 1'b0;
-	2'b10: Q = 1'b1;
-	2'b11: Q = 1'bx;
-	default: Q = Q;
-	endcase
-	end
-Qbar = ~Q;
-end 
+begin Q <= D; end
+Qb = ~Q;
+end
+
 endmodule
 
-module DLatch (input EN, D, output reg Q, Qbar);
+
+// Positive Level D Latch using case
+module Pos_Level_DLatchc (input D, EN, output reg Q, Qb);
 
 always@(*)
 begin
-if(EN)
-	begin
-	Q = D;
-	end
-Qbar = ~Q;
-end 
+case(EN)
+1'b0: Q = Q;
+1'b1: Q = D;
+endcase
+Qb = ~Q;
+end
 
 endmodule
 
-//Dataflow Style
-module SRLatchdF (input EN, R, S, output Q, Qbar);
 
-assign Q    = ~((R & EN) | Qbar);
-assign Qbar = ~((S & EN) | Q);
+// Negative Level D Latch
+module Neg_Level_DLatch (input D, ENb, output reg Q, Qb);
+
+always@(*)
+begin
+if(~ENb)
+begin Q <= D; end
+Qb = ~Q;
+end
 
 endmodule
 
-module DLatchdF (input EN, D, output Q, Qbar);
+// Negative Level D Latch using case
+module Neg_Level_DLatchc (input D, ENb, output reg Q, Qb);
 
-assign Q    = (D & EN) | Q;
-assign Qbar = (~D & EN) | Qbar;
+always@(*)
+begin
+case(ENb)
+1'b0: Q = D;
+1'b1: Q = Q;
+endcase
+Qb = ~Q;
+end
 
 endmodule
